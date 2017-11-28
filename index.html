@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Gabriel fullstack frontend</title>
+  </head>
+  <body>
+    <h2> All orders </h2>
+    <div id="hello-world-app">
+     <h3 v-for="item in items">{{ item.order_id }} <br>
+     <button> Submit Feedback </button></h3>
+   </div>
+    <script
+      src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+    <script src='./assets/js/main.js'></script>
+  </body>
+</html>
