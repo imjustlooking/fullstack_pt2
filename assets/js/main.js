@@ -75,9 +75,17 @@ Vue.component('modal', {
 
           <div class="modal-body">
             <slot name="body">
+              <form>
               <div v-for="orderitem in orderitems">
                 <p> {{orderitem.name}} </p>
-              </div>
+                <input type="radio" id="ratingChoice1" name="rating" value="1">
+                <label for="ratingChoice1">&#128077; </label>
+                <input type="radio" id="ratingChoice2" name="rating" value="-1">
+                <label for="ratingChoice2">&#128078; </label>
+                <input type='text' name='feedback' size='45' placeholder='Feel free to leave us feedback'>
+              </div><br>
+              <input type="submit" value="Submit">
+              </form>
             </slot>
           </div>
 
@@ -85,7 +93,7 @@ Vue.component('modal', {
             <slot name="footer">
               default footer
               <button class="modal-default-button" @click="$emit('close')">
-                OK
+                X
               </button>
             </slot>
           </div>
