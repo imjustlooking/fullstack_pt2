@@ -3,13 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Gabriel fullstack frontend</title>
+    <link rel="stylesheet" href="./assets/css/main.css">
   </head>
   <body>
     <h2> All orders </h2>
-    <div id="hello-world-app">
-     <h3 v-for="item in items">{{ item.order_id }} <br>
-     <button> Submit Feedback </button></h3>
+    <div id="order-display">
+     <div v-for="item in items"><h3>{{ item.order_id }}</h3>
+       <div v-if="!item.feedback_submitted">
+         <div id="app">
+           <modaltoggle :item="item">test</modaltoggle>
+        </div>
+       </div>
+          <p v-else> Thank you! </p>
+     </div>
    </div>
+
+
+
     <script
       src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.min.js">
     </script>
