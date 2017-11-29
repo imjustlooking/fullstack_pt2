@@ -11,7 +11,7 @@
      <div v-for="item in items"><h3>{{ item.order_id }}</h3>
        <div v-if="!item.feedback_submitted">
          <div id="app">
-           <modaltoggle :item="item">test</modaltoggle>
+           <modaltoggle :order="item">test</modaltoggle>
         </div>
        </div>
           <p v-else> Thank you! </p>
