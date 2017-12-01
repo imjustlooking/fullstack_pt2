@@ -1,4 +1,4 @@
-var modTog = Vue.component('modaltoggle', {
+Vue.component('modaltoggle', {
   props: ['order'],
   template: `
   <div>
@@ -44,7 +44,7 @@ var orders = new Vue({
       this.$http.get('https://floating-peak-67345.herokuapp.com/orders')
       .then(response => {
         this.items = response.data.orders
-        console.log(response.data.orders)
+        console.log('order list', response.data.orders)
       },
       response => {
         console.log(response)
@@ -54,11 +54,25 @@ var orders = new Vue({
 })
 orders.load()
 
+new Vue({
+  el: '#formSubmit',
+  data: {
+  	output: {}
+  },
+  methods: {
+  	getFormValues: function () {
+      console.log('getFormValues', this.$refs.form.value)
+    }
+  }
+})
+
 Vue.component('modal', {
   props: ['order', 'orderitems'],
   data () {
     return {
-      fooditems: []
+      feedback: [],
+      rating: [],
+      data: []
     }
   },
   template: `<transition name="modal">
@@ -75,18 +89,22 @@ Vue.component('modal', {
 
           <div class="modal-body">
             <slot name="body">
-              <form>
-              <div v-for="orderitem in orderitems">
-                <p> {{orderitem.name}} </p>
-                <input type="radio" id="ratingChoice1" name="rating" value="1">
-                <label for="ratingChoice1">&#128077; </label>
-                <input type="radio" id="ratingChoice2" name="rating" value="-1">
-                <label for="ratingChoice2">&#128078; </label>
-                <input type='text' name='feedback' size='45' placeholder='Feel free to leave us feedback'>
+              <div id="formSubmit">
+              <form v-on:submit.prevent="getFormValues">
+              <div v-for="(orderitem,index) in orderitems">
+                <p> {{orderitem.name}} {{index}}</p>
+                  <input type="radio" v-model='rating[index]' value="1">
+                  <label for="ratingChoice1">&#128077;</label>
+                  <input type="radio" v-model='rating[index]' value="-1">
+                  <label for="ratingChoice2">&#128078; </label>
+                  <input type='text' v-model='feedback[index]' name='feedback' size='45' placeholder='Feel free to leave us feedback'>
               </div><br>
-              <input type="submit" value="Submit">
+              <button>Submit</button>
               </form>
+              </div>
             </slot>
+            {{feedback}}
+            {{rating}}
           </div>
 
           <div class="modal-footer">
@@ -113,6 +131,9 @@ Vue.component('modal', {
       response => {
         console.log(response)
       })
+    },
+    getFormValues: function () {
+      console.log('getFormValues', this.$refs.form.value)
     }
   }
 })
