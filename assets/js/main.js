@@ -19,7 +19,8 @@ Vue.component('modaltoggle', {
     },
     fooditem: function () {
       var orderId = this.order.order_id
-      this.$http.get(`https://floating-peak-67345.herokuapp.com/orders/${orderId}`)
+      console.log('this is the one')
+      this.$http.get(`http://localhost:4000/orders/${orderId}`)
       .then(response => {
         // this.items = response.data.orders
         this.orderitems = response.data.order[0].order_items
@@ -54,25 +55,13 @@ var orders = new Vue({
 })
 orders.load()
 
-new Vue({
-  el: '#formSubmit',
-  data: {
-  	output: {}
-  },
-  methods: {
-  	getFormValues: function () {
-      console.log('getFormValues', this.$refs.form.value)
-    }
-  }
-})
-
 Vue.component('modal', {
   props: ['order', 'orderitems'],
   data () {
     return {
-      feedback: [],
+      comment: [],
       rating: [],
-      data: []
+      ratable_id: []
     }
   },
   template: `<transition name="modal">
@@ -90,21 +79,23 @@ Vue.component('modal', {
           <div class="modal-body">
             <slot name="body">
               <div id="formSubmit">
-              <form v-on:submit.prevent="getFormValues">
+                <form v-on:submit.prevent="getFormValues">
               <div v-for="(orderitem,index) in orderitems">
-                <p> {{orderitem.name}} {{index}}</p>
-                  <input type="radio" v-model='rating[index]' value="1">
+                <p> {{orderitem.name}} {{orderitem.order_item_id}}</p>
+                  <input type="hidden" v-model='ratable_id[index]' v-bind:value='orderitem.order_item_id'>
+                  <input type="radio" v-model='rating[index]' value=1>
                   <label for="ratingChoice1">&#128077;</label>
-                  <input type="radio" v-model='rating[index]' value="-1">
+                  <input type="radio" v-model='rating[index]' value=-1>
                   <label for="ratingChoice2">&#128078; </label>
-                  <input type='text' v-model='feedback[index]' name='feedback' size='45' placeholder='Feel free to leave us feedback'>
+                  <input type='text' v-model='comment[index]' name='feedback' size='45' placeholder='Feel free to leave us feedback'>
               </div><br>
               <button>Submit</button>
-              </form>
+            </form>
               </div>
             </slot>
-            {{feedback}}
+            {{comment}}
             {{rating}}
+            {{ratable_id}}
           </div>
 
           <div class="modal-footer">
@@ -121,19 +112,23 @@ Vue.component('modal', {
   </transition>
   `,
   methods: {
-    fooditem: function () {
-      console.log('this order id', this.order_id)
-      this.$http.get('https://floating-peak-67345.herokuapp.com/orders')
-      .then(response => {
-        this.items = response.data.orders
-        console.log('response from fooditem', response.data.orders)
-      },
-      response => {
-        console.log(response)
-      })
-    },
     getFormValues: function () {
-      console.log('getFormValues', this.$refs.form.value)
+      console.log('comment', this.comment)
+      console.log('rating', this.rating)
+      var orderId = this.order.order_id
+      console.log('order_id', orderId)
+      this.$http.post(`http://localhost:4000/orders/${orderId}/feedbacks`, [this.comment, this.rating]).then(response => {
+        // get status
+        response.status
+        // get status text
+        response.statusText
+        // get 'Expires' header
+        response.headers.get('Expires')
+        // get body data
+        this.someData = response.body
+      }, response => {
+        // error callback
+      });
     }
   }
 })
